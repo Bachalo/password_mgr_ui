@@ -4,43 +4,30 @@
 
 import 'dart:convert';
 
-SearchResult searchResultFromJson(String str) =>
-    SearchResult.fromJson(json.decode(str));
+List<SearchResult> searchResultFromJson(String str) => List<SearchResult>.from(
+    json.decode(str).map((x) => SearchResult.fromJson(x)));
 
-String searchResultToJson(SearchResult data) => json.encode(data.toJson());
+String searchResultToJson(List<SearchResult> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class SearchResult {
   SearchResult({
-    required this.result,
-  });
-
-  List<Result> result;
-
-  factory SearchResult.fromJson(Map<String, dynamic> json) => SearchResult(
-        result:
-            List<Result>.from(json["Result"].map((x) => Result.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "Result": List<dynamic>.from(result.map((x) => x.toJson())),
-      };
-}
-
-class Result {
-  Result({
     required this.id,
+    required this.password,
     required this.email,
     required this.urlAddress,
     required this.username,
   });
 
   int id;
+  String password;
   String email;
   String urlAddress;
   String username;
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory SearchResult.fromJson(Map<String, dynamic> json) => SearchResult(
         id: json["id"],
+        password: json["password"],
         email: json["email"],
         urlAddress: json["url_address"],
         username: json["username"],
@@ -48,6 +35,7 @@ class Result {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "password": password,
         "email": email,
         "url_address": urlAddress,
         "username": username,

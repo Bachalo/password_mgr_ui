@@ -79,8 +79,8 @@ class Services {
 
   //
 
-  static Future<SearchResult> search(String term) async {
-    final Uri apiUri = Uri.parse("https://passwordmgrapi.herokuapp.com/add");
+  static Future<List<SearchResult>> search(String term) async {
+    final Uri apiUri = Uri.parse("https://passwordmgrapi.herokuapp.com/search");
 
     final response = await http.post(
       apiUri,
@@ -93,7 +93,11 @@ class Services {
         },
       ),
     );
-    final SearchResult message = searchResultFromJson(response.body);
+
+    print(response.statusCode);
+    final List<SearchResult> message = searchResultFromJson(response.body);
+
+    print(response.body);
 
     return message;
   }
