@@ -1,4 +1,6 @@
 # chrome_extension
+What's new ?
+ - Redesinged splash screen
 
 
 ## ToDo List
@@ -14,3 +16,5 @@
 - [] Chrome extension testing
 
 
+
+Target proportions = 2.1

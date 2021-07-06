@@ -25,17 +25,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Text(
+            "Password_mgr",
+            style: TextStyle(fontSize: 45, color: Colors.cyan),
+          ),
+        ),
+      ),
       backgroundColor: Colors.black,
       body: Column(
         children: [
           SizedBox(
             height: 50,
-          ),
-          Center(
-            child: Text(
-              "Password_mgr",
-              style: TextStyle(fontSize: 45),
-            ),
           ),
           SizedBox(
             height: 50,

@@ -5,6 +5,7 @@ import 'package:chrome_extension/services/Services.dart';
 import 'package:chrome_extension/services/models/responseModel.dart';
 import 'package:chrome_extension/services/models/searchModel.dart';
 import 'package:chrome_extension/ui/components/animatedText.dart';
+import 'package:chrome_extension/ui/components/ctrlcButton.dart';
 import 'package:chrome_extension/ui/components/entry.dart';
 import 'package:flutter/material.dart';
 
@@ -37,12 +38,19 @@ class _IndexState extends State<Index> {
     var url = js.JsObject.fromBrowserObject(js.context['state']);
     // print(url["currentURL"]);
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.grey[900],
         appBar: AppBar(
           backgroundColor: Colors.black,
           title:
               AnimatedText("${url["currentURL"]}", Duration(microseconds: 300)),
           actions: [
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    _userFuture = _getFuture();
+                  });
+                },
+                icon: Icon(Icons.update)),
             IconButton(
                 onPressed: () {
                   Navigator.pushNamed(context, "/settings");
@@ -74,8 +82,77 @@ class _IndexState extends State<Index> {
                       itemCount: _futureList.length,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (BuildContext context, int index) {
-                        return Entry(_futureList[index].email,
-                            _futureList[index].password);
+                        return Card(
+                          elevation: 20,
+                          shadowColor: Colors.black,
+                          color: Colors.black,
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0, horizontal: 10.0),
+                                    child: Icon(Icons.password_sharp,
+                                        size: 34, color: Colors.grey[800]),
+                                  ),
+                                  Text(
+                                    "Facebook",
+                                    style: TextStyle(fontSize: 24),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Text(_futureList[index].email),
+                                    Spacer(),
+                                    CtrlCButton(_futureList[index].email)
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                        '${_futureList[index].password.replaceAll(RegExp(r"."), "*")}')
+                                    // Text(,_futureList[index].password),
+                                    ,
+                                    Spacer(),
+                                    CtrlCButton(_futureList[index].password)
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(Icons.short_text,
+                                          color: Colors.grey[800]),
+                                    ),
+                                    Text("Social Media"),
+                                    Spacer(),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.update,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                    Text("24 hours ago")
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                        // return Entry(_futureList[index].email,
+                        //     _futureList[index].password);
                       },
                     ),
                   );
