@@ -26,6 +26,6 @@ class _CtrlCButtonState extends State<CtrlCButton> {
             FlutterClipboard.copy(widget.text).then((value) => print("copied"));
           }
         },
-        child: checked ? Icon(Icons.check) : Text("CTRL-C"));
+        child: checked ? const Icon(Icons.check) : const Text("CTRL-C"));
   }
 }

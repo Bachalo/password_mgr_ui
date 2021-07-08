@@ -1,7 +1,7 @@
 //
 
-import 'package:chrome_extension/services/Services.dart';
-import 'package:chrome_extension/ui/components/animatedText.dart';
+import 'package:chrome_extension/services/services.dart';
+import 'package:chrome_extension/ui/components/animated_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,17 +19,16 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: AnimatedText(
+        title: const AnimatedText(
           "Seetings",
           Duration(seconds: 1),
         ),
       ),
       body: Column(
         children: [
-          Spacer(),
+          const Spacer(),
           Center(
             child: CupertinoButton(
-                child: Text("LOGOUT"),
                 color: Colors.red,
                 onPressed: () async {
                   final message = await Services.logout();
@@ -39,7 +38,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         ModalRoute.withName("/splashScreen"));
                   }
                   print(message.response);
-                }),
+                },
+                child: const Text("LOGOUT")),
           )
         ],
       ),

@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 
-import 'animatedText.dart';
-import 'ctrlcButton.dart';
+import 'animated_text.dart';
+import 'ctrlc_button.dart';
 
 class Entry extends StatelessWidget {
   final String login;
@@ -18,30 +18,24 @@ class Entry extends StatelessWidget {
         // SizedBox(
         //   width: 50,
         // ),
-        Container(
+        SizedBox(
+          width: 100,
           child: AnimatedText(
             login,
-            Duration(microseconds: 300),
+            const Duration(microseconds: 300),
           ),
-          width: 100,
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: CtrlCButton(login),
         ),
-        // SizedBox(
-        //   width: 50,
-        // ),
-        Container(
+        SizedBox(
+          width: 100,
           child: AnimatedText(
             password,
-            Duration(microseconds: 300),
+            const Duration(microseconds: 300),
           ),
-          width: 100,
         ),
-        // SizedBox(
-        //   width: 50,
-        // ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: CtrlCButton(password),

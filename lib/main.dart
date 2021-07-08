@@ -1,36 +1,36 @@
 //
 
-import 'package:chrome_extension/services/Services.dart';
+import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/ui/pages/index.dart';
 import 'package:chrome_extension/ui/pages/login.dart';
 import 'package:chrome_extension/ui/pages/register.dart';
-import 'package:chrome_extension/ui/pages/splashScreen.dart';
+import 'package:chrome_extension/ui/pages/splash_screen.dart';
 import 'package:chrome_extension/ui/pages/settings.dart';
 import 'package:chrome_extension/ui/scheme.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
-  var status = await SharedPrefs.getPref("isLoggedIn");
+  final status = await SharedPrefs.getPref("isLoggedIn");
   print(status);
   runApp(
     MaterialApp(
       theme: ThemeData(
-          textTheme: TextTheme(
+          textTheme: const TextTheme(
         bodyText1: TextStyle(),
         bodyText2: TextStyle(),
       ).apply(
-        bodyColor: kMainFont_color,
-        displayColor: kSecondaryFont_color,
+        bodyColor: kMainFontColor,
+        displayColor: kSecondaryFontColor,
       )),
       // home: RegisterScreen(),
-      home: status == true ? Index() : SplashScreen(),
+      home: status == true ? const Index() : const SplashScreen(),
       debugShowCheckedModeBanner: false,
       routes: {
-        '/splashScreen': (ctx) => SplashScreen(),
-        '/home': (ctx) => Index(),
-        '/settings': (ctx) => SettingsPage(),
-        '/login': (ctx) => LoginScreen(),
-        '/register': (ctx) => RegisterScreen()
+        '/splashScreen': (ctx) => const SplashScreen(),
+        '/home': (ctx) => const Index(),
+        '/settings': (ctx) => const SettingsPage(),
+        '/login': (ctx) => const LoginScreen(),
+        '/register': (ctx) => const RegisterScreen()
       },
     ),
   );

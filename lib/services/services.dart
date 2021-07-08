@@ -1,11 +1,11 @@
 //
 
 import 'dart:convert';
-import 'package:chrome_extension/services/models/searchModel.dart';
+import 'package:chrome_extension/services/models/search_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-import 'models/responseModel.dart';
+import 'models/response_model.dart';
 
 class Services {
   //
@@ -104,14 +104,15 @@ class Services {
 }
 
 class SharedPrefs {
-  static void setPref(key, value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  static Future<bool> setPref(String key, bool value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(key, value);
+    return value;
   }
 
-  static getPref(key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var status = prefs.getBool(key) ?? false;
+  static Future<bool> getPref(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final status = prefs.getBool(key) ?? false;
     return status;
   }
 }

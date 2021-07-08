@@ -1,6 +1,5 @@
 //
 
-import 'package:chrome_extension/ui/components/animatedText.dart';
 import 'package:chrome_extension/ui/scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,27 +11,68 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+
   final string = "PASSWORD_MGR";
+  var _expanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 450),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final backArrowAnimationTween = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(controller);
+
     return Scaffold(
       backgroundColor: kBackground,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 340,
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: FadeTransition(
+                opacity: backArrowAnimationTween,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    size: 32.0,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _expanded = false;
+                      controller.reverse();
+                    });
+                  },
+                ),
+              ),
+            ),
           ),
+          const Spacer(),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  child: SizedBox(
                     width: 139,
                     child: Text(
                       "Your password manager",
@@ -40,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       style: kMainFont(
                         TextStyle(
                           fontSize: 13,
-                          color: kPrimary_light,
+                          color: kPrimaryLight,
                           fontWeight: kFontRegular,
                           shadows: kFontShadow,
                         ),
@@ -52,9 +92,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text("PASSWORD_MGR",
                       style: kMainFont(
-                        TextStyle(
+                        const TextStyle(
                           fontSize: 18,
-                          color: kPrimary_dark,
+                          color: kPrimaryDark,
                           fontWeight: kFontBold,
                         ),
                       )),
@@ -62,35 +102,56 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
           ),
-          Spacer(),
-          Container(
-            height: 112,
-            decoration: BoxDecoration(
+          const Spacer(),
+          // AnimatedContainer(
+          //   height: _expanded ? 200.0 : 274.0,
+          //   duration: const Duration(milliseconds: 300),
+          // ),
+          AnimatedContainer(
+            height: _expanded ? 582 : 112,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOutCubic,
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(12),
               ),
-              color: kSecondary_dark,
+              color: kSecondaryDark,
+              boxShadow: [
+                BoxShadow(
+                  color: kShadowColor,
+                  spreadRadius: 10,
+                  blurRadius: 5,
+                  offset: Offset(0, 7), // changes position of shadow
+                ),
+              ],
+              // color: kSecondaryDark,
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                const SizedBox(
+                  height: 12.0,
+                ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/login');
+                    setState(() {
+                      controller.forward();
+                      _expanded = true;
+                    });
+                    // Navigator.pushNamed(context, '/login');
                   },
                   child: Text(
                     "LOGIN",
                     style: kMainFont(
                       TextStyle(
                           fontSize: 24,
-                          color: kPrimary_dark,
+                          color: kPrimaryDark,
                           fontWeight: kFontBold,
                           shadows: kFontShadow),
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 12,
                 ),
                 Row(
@@ -99,14 +160,14 @@ class _SplashScreenState extends State<SplashScreen> {
                     Text(
                       "Don't have an account ?",
                       style: kMainFont(
-                        TextStyle(
+                        const TextStyle(
                           fontSize: 14,
-                          color: kPrimary_light,
+                          color: kPrimaryLight,
                           fontWeight: kFontMedium,
                         ),
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/register');
@@ -116,7 +177,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         style: kMainFont(
                           TextStyle(
                             fontSize: 24,
-                            color: kPrimary_dark,
+                            color: kPrimaryDark,
                             fontWeight: kFontBold,
                             shadows: kFontShadow,
                           ),

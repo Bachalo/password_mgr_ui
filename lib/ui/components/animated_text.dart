@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'flashingCursor.dart';
+import 'flashing_cursor.dart';
 
 class AnimatedText extends StatefulWidget {
   final String text;
@@ -22,13 +22,13 @@ class _AnimatedTextState extends State<AnimatedText> {
           children: [
             Text(
               widget.text.substring(0, value),
-              style: TextStyle(color: Colors.cyan),
+              style: const TextStyle(color: Colors.cyan),
             ),
-            FlashingCursor()
+            const FlashingCursor()
           ],
         );
       },
-      duration: Duration(seconds: 3),
+      duration: const Duration(seconds: 3),
       tween: IntTween(begin: 0, end: widget.text.length),
     );
   }
