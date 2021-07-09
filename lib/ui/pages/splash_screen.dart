@@ -1,5 +1,6 @@
 //
 
+import 'package:chrome_extension/ui/components/login_form.dart';
 import 'package:chrome_extension/ui/scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,18 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController controller;
+    with TickerProviderStateMixin {
+  late final AnimationController _backArrowController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 450),
+  );
+  late final AnimationController _bottomTextController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 450),
+  );
+
+  late final Animation<double> _backArrowAnimation =
+      CurvedAnimation(parent: _backArrowController, curve: Curves.easeIn);
 
   final string = "PASSWORD_MGR";
   var _expanded = false;
@@ -21,24 +32,23 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 450),
-    );
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _backArrowController.dispose();
+    _bottomTextController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final backArrowAnimationTween = Tween(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(controller);
+    var screenSize = MediaQuery.of(context).size;
+
+    final bottomTextAnimationTween = Tween(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(_bottomTextController);
 
     return Scaffold(
       backgroundColor: kBackground,
@@ -49,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
             child: Align(
               alignment: Alignment.topLeft,
               child: FadeTransition(
-                opacity: backArrowAnimationTween,
+                opacity: _backArrowAnimation,
                 child: IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
@@ -58,7 +68,8 @@ class _SplashScreenState extends State<SplashScreen>
                   onPressed: () {
                     setState(() {
                       _expanded = false;
-                      controller.reverse();
+                      _backArrowController.reverse();
+                      _bottomTextController.reverse();
                     });
                   },
                 ),
@@ -103,13 +114,9 @@ class _SplashScreenState extends State<SplashScreen>
             ),
           ),
           const Spacer(),
-          // AnimatedContainer(
-          //   height: _expanded ? 200.0 : 274.0,
-          //   duration: const Duration(milliseconds: 300),
-          // ),
           AnimatedContainer(
-            height: _expanded ? 582 : 112,
-            duration: const Duration(milliseconds: 300),
+            height: _expanded ? screenSize.height * 0.7 : 112,
+            duration: const Duration(milliseconds: 750),
             curve: Curves.easeInOutCubic,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.vertical(
@@ -124,7 +131,6 @@ class _SplashScreenState extends State<SplashScreen>
                   offset: Offset(0, 7), // changes position of shadow
                 ),
               ],
-              // color: kSecondaryDark,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -133,59 +139,82 @@ class _SplashScreenState extends State<SplashScreen>
                   height: 12.0,
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    _bottomTextController.forward();
+
+                    // await Future.delayed(
+                    //     const Duration(milliseconds: 100), () {});
+                    _expanded = true;
                     setState(() {
-                      controller.forward();
-                      _expanded = true;
+                      _backArrowController.forward();
                     });
-                    // Navigator.pushNamed(context, '/login');
                   },
-                  child: Text(
-                    "LOGIN",
-                    style: kMainFont(
-                      TextStyle(
-                          fontSize: 24,
-                          color: kPrimaryDark,
-                          fontWeight: kFontBold,
-                          shadows: kFontShadow),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account ?",
-                      style: kMainFont(
-                        const TextStyle(
-                          fontSize: 14,
-                          color: kPrimaryLight,
-                          fontWeight: kFontMedium,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/register');
-                      },
-                      child: Text(
-                        "REGISTER",
-                        style: kMainFont(
-                          TextStyle(
+                  child: AnimatedDefaultTextStyle(
+                    curve: Curves.easeInOutQuad,
+                    style: _expanded
+                        ? kMainFont(TextStyle(
+                            fontSize: 48,
+                            color: Colors.black,
+                            fontWeight: kFontBold,
+                            shadows: kFontShadow))
+                        : kMainFont(TextStyle(
                             fontSize: 24,
                             color: kPrimaryDark,
                             fontWeight: kFontBold,
-                            shadows: kFontShadow,
+                            shadows: kFontShadow)),
+                    duration: const Duration(
+                      milliseconds: 450,
+                    ),
+                    child: const Text("LOGIN"),
+                  ),
+                ),
+
+                // const SizedBox(
+                //   height: 12,
+                // ),
+                FadeTransition(
+                  opacity: bottomTextAnimationTween,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account ?",
+                          style: kMainFont(
+                            const TextStyle(
+                              fontSize: 14,
+                              color: kPrimaryLight,
+                              fontWeight: kFontMedium,
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ],
-                )
+                        const SizedBox(width: 12),
+                        TextButton(
+                            onPressed: () async {
+                              _backArrowController.forward();
+
+                              setState(() {
+                                _expanded = true;
+                              });
+                            },
+                            child: Text(
+                              "REGISTER",
+                              style: kMainFont(
+                                TextStyle(
+                                  fontSize: 24,
+                                  color: kPrimaryDark,
+                                  fontWeight: kFontBold,
+                                  shadows: kFontShadow,
+                                ),
+                              ),
+                            )),
+                      ]),
+                ),
+                Expanded(
+                    child: Visibility(
+                        visible: _expanded,
+                        child: LoginForm(
+                          screenSize: screenSize,
+                        )))
               ],
             ),
           ),

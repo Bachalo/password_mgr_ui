@@ -8,6 +8,7 @@ const Color kPrimaryLight = Color(0xFFAA9ABA);
 const Color kPrimaryDark = Color(0xFF8783D1);
 const Color kSecondaryLight = Color(0xFFE3B9BC);
 const Color kSecondaryDark = Color(0xFFD1ABAD);
+const Color kSecondaryAccent = Color(0xFFBFA4A4);
 
 // FONTS
 
