@@ -5,14 +5,17 @@ import 'package:chrome_extension/ui/components/animted_bottom_button.dart';
 import 'package:chrome_extension/ui/components/checkbox_field.dart';
 import 'package:flutter/material.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+class RegisterForm extends StatefulWidget {
+  final Size screenSize;
+  const RegisterForm({required this.screenSize, Key? key}) : super(key: key);
 
   @override
-  _LoginFormState createState() => _LoginFormState();
+  _RegisterFormState createState() => _RegisterFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _RegisterFormState extends State<RegisterForm> {
+  final TextEditingController usernameTextController = TextEditingController();
+
   final TextEditingController emailTextController = TextEditingController();
   final TextEditingController passwordTextController = TextEditingController();
 
@@ -20,6 +23,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   void dispose() {
+    usernameTextController.dispose();
     emailTextController.dispose();
     passwordTextController.dispose();
     super.dispose();
@@ -27,12 +31,16 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
     return Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          AnimatedFormTextFlied(
+            controller: usernameTextController,
+            fieldTitlte: "username",
+            obscureText: false,
+          ),
           AnimatedFormTextFlied(
             controller: emailTextController,
             fieldTitlte: "email",
@@ -43,12 +51,12 @@ class _LoginFormState extends State<LoginForm> {
             fieldTitlte: "password",
             obscureText: true,
           ),
-          const CheckBoxField("Keep me logged in"),
-          AnimatedBottomButton("LOGIN", () {
+          const CheckBoxField("I agree to the terms of service"),
+          AnimatedBottomButton("REGISTER", () {
             print(emailTextController.text + passwordTextController.text);
           }),
           SizedBox(
-            height: screenSize.height / 10,
+            height: widget.screenSize.height / 10,
           )
         ],
       ),

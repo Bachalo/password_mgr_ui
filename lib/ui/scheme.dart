@@ -38,3 +38,8 @@ const FontWeight kFontRegular = FontWeight.w400;
 const FontWeight kFontMedium = FontWeight.w500;
 
 // ANIMATION TWEENS
+
+const BorderSide kTextFieldBorderSide =
+    BorderSide(width: 0, color: Colors.transparent, style: BorderStyle.none);
+
+const Duration kAnimationDuration = Duration(milliseconds: 300);

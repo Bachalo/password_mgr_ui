@@ -20,7 +20,7 @@ class _AnimatedBottomButtonState extends State<AnimatedBottomButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 150,
       width: 400,
       child: Center(
         child: MouseRegion(

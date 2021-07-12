@@ -1,6 +1,7 @@
 //
 
 import 'package:chrome_extension/ui/components/login_form.dart';
+import 'package:chrome_extension/ui/components/register_form.dart';
 import 'package:chrome_extension/ui/scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,41 +15,43 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
-  late final AnimationController _backArrowController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 450),
-  );
-  late final AnimationController _bottomTextController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 450),
-  );
+  var _registering = false;
+  var _logging = false;
 
-  late final Animation<double> _backArrowAnimation =
-      CurvedAnimation(parent: _backArrowController, curve: Curves.easeIn);
-
-  final string = "PASSWORD_MGR";
-  var _expanded = false;
-
-  @override
-  void initState() {
-    super.initState();
+  void _showRegisterForm(screenSize) {
+    setState(() {
+      _registering = true;
+      _logging = false;
+    });
   }
 
-  @override
-  void dispose() {
-    _backArrowController.dispose();
-    _bottomTextController.dispose();
-    super.dispose();
+  void _showLoginForm() {
+    setState(() {
+      _registering = false;
+      _logging = true;
+    });
+  }
+
+  void _goBack() {
+    setState(() {
+      _registering = false;
+      _logging = false;
+    });
+  }
+
+  Widget _screenToShow(screenSize) {
+    if (_registering == true && _logging == false) {
+      return RegisterForm(screenSize: screenSize);
+    } else if (_registering == false && _logging == true) {
+      return const LoginForm();
+    } else {
+      return Container();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-
-    final bottomTextAnimationTween = Tween(
-      begin: 1.0,
-      end: 0.0,
-    ).animate(_bottomTextController);
 
     return Scaffold(
       backgroundColor: kBackground,
@@ -58,22 +61,21 @@ class _SplashScreenState extends State<SplashScreen>
             padding: const EdgeInsets.all(4.0),
             child: Align(
               alignment: Alignment.topLeft,
-              child: FadeTransition(
-                opacity: _backArrowAnimation,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    size: 32.0,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _expanded = false;
-                      _backArrowController.reverse();
-                      _bottomTextController.reverse();
-                    });
-                  },
-                ),
-              ),
+              child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 450),
+                  child: (_registering == true || _logging == true)
+                      ? IconButton(
+                          splashColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            size: 32.0,
+                          ),
+                          onPressed: () {
+                            _goBack();
+                          },
+                        )
+                      : const SizedBox()),
             ),
           ),
           const Spacer(),
@@ -115,7 +117,9 @@ class _SplashScreenState extends State<SplashScreen>
           ),
           const Spacer(),
           AnimatedContainer(
-            height: _expanded ? screenSize.height * 0.7 : 112,
+            height: (_registering == true || _logging == true)
+                ? screenSize.height * 0.7
+                : 112,
             duration: const Duration(milliseconds: 750),
             curve: Curves.easeInOutCubic,
             decoration: const BoxDecoration(
@@ -138,86 +142,107 @@ class _SplashScreenState extends State<SplashScreen>
                 const SizedBox(
                   height: 12.0,
                 ),
-                TextButton(
-                  onPressed: () async {
-                    _bottomTextController.forward();
-
-                    // await Future.delayed(
-                    //     const Duration(milliseconds: 100), () {});
-                    _expanded = true;
-                    setState(() {
-                      _backArrowController.forward();
-                    });
-                  },
-                  child: AnimatedDefaultTextStyle(
-                    curve: Curves.easeInOutQuad,
-                    style: _expanded
-                        ? kMainFont(TextStyle(
-                            fontSize: 48,
-                            color: Colors.black,
-                            fontWeight: kFontBold,
-                            shadows: kFontShadow))
-                        : kMainFont(TextStyle(
-                            fontSize: 24,
-                            color: kPrimaryDark,
-                            fontWeight: kFontBold,
-                            shadows: kFontShadow)),
-                    duration: const Duration(
-                      milliseconds: 450,
-                    ),
-                    child: const Text("LOGIN"),
-                  ),
+                AnimatedSwitcher(
+                  duration: kAnimationDuration,
+                  switchInCurve: Curves.easeInOutCubic,
+                  switchOutCurve: Curves.easeInOutCubic,
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) =>
+                          ScaleTransition(child: child, scale: animation),
+                  child: !_registering
+                      ? AnimatedSwitcher(
+                          duration: kAnimationDuration,
+                          switchInCurve: Curves.easeInOutCubic,
+                          switchOutCurve: Curves.easeInOutCubic,
+                          transitionBuilder: (Widget child,
+                                  Animation<double> animation) =>
+                              ScaleTransition(child: child, scale: animation),
+                          child: !_logging
+                              ? TextButton(
+                                  onPressed: () {
+                                    _showLoginForm();
+                                  },
+                                  child: Text(
+                                    "LOGIN",
+                                    style: kMainFont(TextStyle(
+                                        fontSize: 24,
+                                        color: kPrimaryDark,
+                                        fontWeight: kFontBold,
+                                        shadows: kFontShadow)),
+                                  ),
+                                )
+                              : Text(
+                                  "LOGIN",
+                                  style: kMainFont(const TextStyle(
+                                    fontSize: 48,
+                                    color: Colors.black,
+                                    fontWeight: kFontBold,
+                                  )),
+                                ))
+                      : const SizedBox(),
                 ),
-
-                // const SizedBox(
-                //   height: 12,
-                // ),
-                FadeTransition(
-                  opacity: bottomTextAnimationTween,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Don't have an account ?",
-                          style: kMainFont(
-                            const TextStyle(
-                              fontSize: 14,
-                              color: kPrimaryLight,
-                              fontWeight: kFontMedium,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        TextButton(
-                            onPressed: () async {
-                              _backArrowController.forward();
-
-                              setState(() {
-                                _expanded = true;
-                              });
-                            },
-                            child: Text(
-                              "REGISTER",
-                              style: kMainFont(
-                                TextStyle(
-                                  fontSize: 24,
-                                  color: kPrimaryDark,
-                                  fontWeight: kFontBold,
-                                  shadows: kFontShadow,
-                                ),
-                              ),
-                            )),
-                      ]),
+                AnimatedSwitcher(
+                  duration: kAnimationDuration,
+                  switchInCurve: Curves.easeInOutCubic,
+                  switchOutCurve: Curves.easeInOutCubic,
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) =>
+                          ScaleTransition(child: child, scale: animation),
+                  child: !_logging
+                      ? AnimatedSwitcher(
+                          duration: kAnimationDuration,
+                          switchInCurve: Curves.easeInOutCubic,
+                          switchOutCurve: Curves.easeInOutCubic,
+                          transitionBuilder: (Widget child,
+                                  Animation<double> animation) =>
+                              ScaleTransition(child: child, scale: animation),
+                          child: !_registering
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                      Text(
+                                        "Don't have an account ?",
+                                        style: kMainFont(
+                                          const TextStyle(
+                                            fontSize: 14,
+                                            color: kPrimaryLight,
+                                            fontWeight: kFontMedium,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      TextButton(
+                                        onPressed: () {
+                                          _showRegisterForm(screenSize);
+                                        },
+                                        child: Text(
+                                          "REGISTER",
+                                          style: kMainFont(TextStyle(
+                                              fontSize: 24,
+                                              color: kPrimaryDark,
+                                              fontWeight: kFontBold,
+                                              shadows: kFontShadow)),
+                                        ),
+                                      ),
+                                    ])
+                              : Text(
+                                  "REGISTER",
+                                  style: kMainFont(TextStyle(
+                                      fontSize: 48,
+                                      color: Colors.black,
+                                      fontWeight: kFontBold,
+                                      shadows: kFontShadow)),
+                                ))
+                      : const SizedBox(),
                 ),
                 Expanded(
-                    child: Visibility(
-                        visible: _expanded,
-                        child: LoginForm(
-                          screenSize: screenSize,
-                        )))
+                  child: Visibility(
+                      visible: (_registering == true || _logging == true),
+                      child: _screenToShow(screenSize)),
+                ),
               ],
             ),
-          ),
+          )
         ],
       ),
     );
