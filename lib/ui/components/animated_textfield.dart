@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 import '../scheme.dart';
 
 class AnimatedFormTextFlied extends StatefulWidget {
+  final Size screenSize;
   final TextEditingController controller;
+  final String? Function(String?)? validator;
   final String fieldTitlte;
   final bool obscureText;
   const AnimatedFormTextFlied(
-      {required this.controller,
+      {required this.screenSize,
+      required this.controller,
+      required this.validator,
       required this.fieldTitlte,
       required this.obscureText,
       Key? key})
@@ -31,6 +35,12 @@ class _AnimatedFormTextFieldState extends State<AnimatedFormTextFlied> {
     _focusNode.addListener(_onFocusChange);
   }
 
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   _onFocusChange() {
     setState(() {
       _inFocus = !_inFocus;
@@ -41,7 +51,7 @@ class _AnimatedFormTextFieldState extends State<AnimatedFormTextFlied> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 100,
-      width: 275,
+      width: widget.screenSize.width * 0.733333333,
       child: Center(
         child: Stack(
           alignment: Alignment.center,
@@ -61,33 +71,20 @@ class _AnimatedFormTextFieldState extends State<AnimatedFormTextFlied> {
                 ),
                 duration: const Duration(milliseconds: 100),
                 child: TextFormField(
-                  cursorColor: kPrimaryDark,
-                  style: kMainFont(
-                    const TextStyle(
-                      color: Color(0xFF505050),
-                      fontSize: 16,
-                      fontWeight: kFontBold,
-                      fontStyle: FontStyle.italic,
+                    validator: widget.validator,
+                    cursorColor: kPrimaryDark,
+                    style: kMainFont(
+                      const TextStyle(
+                        color: Color(0xFF505050),
+                        fontSize: 16,
+                        fontWeight: kFontBold,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
-                  ),
-                  obscureText: widget.obscureText,
-                  controller: widget.controller,
-                  focusNode: _focusNode,
-                  decoration: InputDecoration(
-                    filled: true,
-                    focusColor: kPrimaryDark,
-                    fillColor: kSecondaryAccent,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: kTextFieldBorderSide),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: kTextFieldBorderSide),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: kTextFieldBorderSide),
-                  ),
-                ),
+                    obscureText: widget.obscureText,
+                    controller: widget.controller,
+                    focusNode: _focusNode,
+                    decoration: kInputDecoration),
               ),
             ),
             Positioned(

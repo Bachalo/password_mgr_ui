@@ -17,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   var _registering = false;
   var _logging = false;
+  var _complete = false;
 
   void _showRegisterForm(screenSize) {
     setState(() {
@@ -40,12 +41,12 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Widget _screenToShow(screenSize) {
-    if (_registering == true && _logging == false) {
+    if (_registering == true && _logging == false && _complete == true) {
       return RegisterForm(screenSize: screenSize);
-    } else if (_registering == false && _logging == true) {
+    } else if (_registering == false && _logging == true && _complete == true) {
       return const LoginForm();
     } else {
-      return Container();
+      return const SizedBox();
     }
   }
 
@@ -117,6 +118,13 @@ class _SplashScreenState extends State<SplashScreen>
           ),
           const Spacer(),
           AnimatedContainer(
+            onEnd: () {
+              print(_complete);
+              setState(() {
+                _complete = !_complete;
+              });
+              print(_complete);
+            },
             height: (_registering == true || _logging == true)
                 ? screenSize.height * 0.7
                 : 112,
@@ -236,10 +244,18 @@ class _SplashScreenState extends State<SplashScreen>
                       : const SizedBox(),
                 ),
                 Expanded(
-                  child: Visibility(
-                      visible: (_registering == true || _logging == true),
-                      child: _screenToShow(screenSize)),
-                ),
+                    child: SizedBox(
+                  width: screenSize.width,
+                  child: AnimatedSwitcher(
+                    duration: kAnimationDuration,
+                    switchInCurve: Curves.easeInOutCubic,
+                    switchOutCurve: Curves.easeInOutCubic,
+                    transitionBuilder:
+                        (Widget child, Animation<double> animation) =>
+                            ScaleTransition(child: child, scale: animation),
+                    child: _screenToShow(screenSize),
+                  ),
+                )),
               ],
             ),
           )

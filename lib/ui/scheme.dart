@@ -43,3 +43,19 @@ const BorderSide kTextFieldBorderSide =
     BorderSide(width: 0, color: Colors.transparent, style: BorderStyle.none);
 
 const Duration kAnimationDuration = Duration(milliseconds: 300);
+
+// FORM FIELD SHIT
+final InputDecoration kInputDecoration = InputDecoration(
+  filled: true,
+  focusColor: kPrimaryDark,
+  fillColor: kSecondaryAccent,
+  enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: kTextFieldBorderSide),
+  focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: kTextFieldBorderSide),
+  border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: kTextFieldBorderSide),
+);

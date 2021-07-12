@@ -34,12 +34,26 @@ class _LoginFormState extends State<LoginForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AnimatedFormTextFlied(
+            screenSize: screenSize,
             controller: emailTextController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Please enter your username";
+              }
+              return null;
+            },
             fieldTitlte: "email",
             obscureText: false,
           ),
           AnimatedFormTextFlied(
+            screenSize: screenSize,
             controller: passwordTextController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Please enter your username";
+              }
+              return null;
+            },
             fieldTitlte: "password",
             obscureText: true,
           ),

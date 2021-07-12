@@ -28,15 +28,13 @@ class _IndexState extends State<Index> {
   }
 
   Future<List<SearchResult>> _getFuture() async {
-    // return await Services.search(url["currentURL"]);
     return Services.search(url["currentURL"]);
   }
 
   @override
   Widget build(BuildContext context) {
     final url = js.JsObject.fromBrowserObject(js.context['state']);
-    // var urlAdress = url["currentURL"];
-    // print(url["currentURL"]);
+
     return Scaffold(
       backgroundColor: Colors.grey[900],
       appBar: AppBar(
@@ -241,7 +239,6 @@ Widget _showPopupInput(BuildContext context, url) {
                       child: const Icon(Icons.close)),
                   TextButton(
                       onPressed: () async {
-                        // print(url["currentURL"]);
                         final ResponseMessage message = await Services.addNew(
                             newPasswordTextController.text,
                             newEmailTextController.text,
