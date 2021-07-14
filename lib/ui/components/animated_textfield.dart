@@ -10,12 +10,14 @@ class AnimatedFormTextFlied extends StatefulWidget {
   final String? Function(String?)? validator;
   final String fieldTitlte;
   final bool obscureText;
+  final IconData prefixIcon;
   const AnimatedFormTextFlied(
       {required this.screenSize,
       required this.controller,
       required this.validator,
       required this.fieldTitlte,
       required this.obscureText,
+      required this.prefixIcon,
       Key? key})
       : super(key: key);
 
@@ -73,18 +75,16 @@ class _AnimatedFormTextFieldState extends State<AnimatedFormTextFlied> {
                 child: TextFormField(
                     validator: widget.validator,
                     cursorColor: kPrimaryDark,
-                    style: kMainFont(
-                      const TextStyle(
-                        color: Color(0xFF505050),
-                        fontSize: 16,
-                        fontWeight: kFontBold,
-                        fontStyle: FontStyle.italic,
-                      ),
+                    style: const TextStyle(
+                      color: Color(0xFF505050),
+                      fontSize: 16,
+                      fontWeight: kFontBold,
+                      fontStyle: FontStyle.italic,
                     ),
                     obscureText: widget.obscureText,
                     controller: widget.controller,
                     focusNode: _focusNode,
-                    decoration: kInputDecoration),
+                    decoration: kInputDecoration(widget.prefixIcon)),
               ),
             ),
             Positioned(
@@ -94,23 +94,19 @@ class _AnimatedFormTextFieldState extends State<AnimatedFormTextFlied> {
                   curve: Curves.ease,
                   duration: const Duration(milliseconds: 250),
                   style: _inFocus
-                      ? kMainFont(
-                          TextStyle(
-                            color: kPrimaryDark,
-                            fontWeight: kFontBold,
-                            fontSize: 24,
-                            shadows: kFontShadow,
-                            fontStyle: FontStyle.italic,
-                          ),
+                      ? TextStyle(
+                          color: kPrimaryDark,
+                          fontWeight: kFontBold,
+                          fontSize: 24,
+                          shadows: kFontShadow,
+                          fontStyle: FontStyle.italic,
                         )
-                      : kMainFont(
-                          TextStyle(
-                            color: Colors.black,
-                            fontWeight: kFontBold,
-                            fontSize: 24,
-                            shadows: kFontShadow,
-                            fontStyle: FontStyle.italic,
-                          ),
+                      : TextStyle(
+                          color: Colors.black,
+                          fontWeight: kFontBold,
+                          fontSize: 24,
+                          shadows: kFontShadow,
+                          fontStyle: FontStyle.italic,
                         ),
                   child: Text(widget.fieldTitlte)),
             ),

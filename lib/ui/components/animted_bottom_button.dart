@@ -19,9 +19,10 @@ class _AnimatedBottomButtonState extends State<AnimatedBottomButton> {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return SizedBox(
-      height: 150,
-      width: 400,
+      height: screenSize.height / 8.12,
+      width: screenSize.width / 1.28,
       child: Center(
         child: MouseRegion(
           onEnter: (event) {
@@ -40,8 +41,12 @@ class _AnimatedBottomButtonState extends State<AnimatedBottomButton> {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 100),
               curve: Curves.ease,
-              height: _hovering ? 100 * 1.1 : 100,
-              width: _hovering ? 291 * 1.1 : 291,
+              height: _hovering
+                  ? screenSize.height / 8.12 * 1.1
+                  : screenSize.height / 8.12,
+              width: _hovering
+                  ? screenSize.width / 1.28 * 1.1
+                  : screenSize.width / 1.28,
               decoration: BoxDecoration(
                 boxShadow: const [
                   BoxShadow(
@@ -59,20 +64,16 @@ class _AnimatedBottomButtonState extends State<AnimatedBottomButton> {
                   duration: const Duration(milliseconds: 100),
                   curve: Curves.ease,
                   style: _hovering
-                      ? kMainFont(
-                          const TextStyle(
-                            color: Colors.black,
-                            fontSize: 24 * 1.4,
-                            fontWeight: kFontBold,
-                          ),
+                      ? const TextStyle(
+                          color: Colors.black,
+                          fontSize: 24 * 1.4,
+                          fontWeight: kFontBold,
                         )
-                      : kMainFont(
-                          const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: kFontBold,
-                            fontStyle: FontStyle.italic,
-                          ),
+                      : const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: kFontBold,
+                          fontStyle: FontStyle.italic,
                         ),
                   child: Text(widget.buttonText),
                 ),

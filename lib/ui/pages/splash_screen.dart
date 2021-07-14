@@ -91,27 +91,25 @@ class _SplashScreenState extends State<SplashScreen>
                     child: Text(
                       "Your password manager",
                       textAlign: TextAlign.center,
-                      style: kMainFont(
-                        TextStyle(
-                          fontSize: 13,
-                          color: kPrimaryLight,
-                          fontWeight: kFontRegular,
-                          shadows: kFontShadow,
-                        ),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: kPrimaryLight,
+                        fontWeight: kFontRegular,
+                        shadows: kFontShadow,
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("PASSWORD_MGR",
-                      style: kMainFont(
-                        const TextStyle(
-                          fontSize: 18,
-                          color: kPrimaryDark,
-                          fontWeight: kFontBold,
-                        ),
-                      )),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "PASSWORD_MGR",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: kPrimaryDark,
+                      fontWeight: kFontBold,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -119,11 +117,9 @@ class _SplashScreenState extends State<SplashScreen>
           const Spacer(),
           AnimatedContainer(
             onEnd: () {
-              print(_complete);
               setState(() {
                 _complete = !_complete;
               });
-              print(_complete);
             },
             height: (_registering == true || _logging == true)
                 ? screenSize.height * 0.7
@@ -170,23 +166,20 @@ class _SplashScreenState extends State<SplashScreen>
                                   onPressed: () {
                                     _showLoginForm();
                                   },
-                                  child: Text(
-                                    "LOGIN",
-                                    style: kMainFont(TextStyle(
-                                        fontSize: 24,
-                                        color: kPrimaryDark,
-                                        fontWeight: kFontBold,
-                                        shadows: kFontShadow)),
-                                  ),
+                                  child: Text("LOGIN",
+                                      style: TextStyle(
+                                          fontSize: 24,
+                                          color: kPrimaryDark,
+                                          fontWeight: kFontBold,
+                                          shadows: kFontShadow)),
                                 )
-                              : Text(
-                                  "LOGIN",
-                                  style: kMainFont(const TextStyle(
+                              : const Text("LOGIN",
+                                  style: TextStyle(
                                     fontSize: 48,
                                     color: Colors.black,
                                     fontWeight: kFontBold,
                                   )),
-                                ))
+                        )
                       : const SizedBox(),
                 ),
                 AnimatedSwitcher(
@@ -208,14 +201,12 @@ class _SplashScreenState extends State<SplashScreen>
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                      Text(
+                                      const Text(
                                         "Don't have an account ?",
-                                        style: kMainFont(
-                                          const TextStyle(
-                                            fontSize: 14,
-                                            color: kPrimaryLight,
-                                            fontWeight: kFontMedium,
-                                          ),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: kPrimaryLight,
+                                          fontWeight: kFontMedium,
                                         ),
                                       ),
                                       const SizedBox(width: 12),
@@ -223,39 +214,34 @@ class _SplashScreenState extends State<SplashScreen>
                                         onPressed: () {
                                           _showRegisterForm(screenSize);
                                         },
-                                        child: Text(
-                                          "REGISTER",
-                                          style: kMainFont(TextStyle(
-                                              fontSize: 24,
-                                              color: kPrimaryDark,
-                                              fontWeight: kFontBold,
-                                              shadows: kFontShadow)),
-                                        ),
+                                        child: Text("REGISTER",
+                                            style: TextStyle(
+                                                fontSize: 24,
+                                                color: kPrimaryDark,
+                                                fontWeight: kFontBold,
+                                                shadows: kFontShadow)),
                                       ),
                                     ])
-                              : Text(
-                                  "REGISTER",
-                                  style: kMainFont(TextStyle(
+                              : Text("REGISTER",
+                                  style: TextStyle(
                                       fontSize: 48,
                                       color: Colors.black,
                                       fontWeight: kFontBold,
                                       shadows: kFontShadow)),
-                                ))
+                        )
                       : const SizedBox(),
                 ),
                 Expanded(
-                    child: SizedBox(
-                  width: screenSize.width,
-                  child: AnimatedSwitcher(
-                    duration: kAnimationDuration,
-                    switchInCurve: Curves.easeInOutCubic,
-                    switchOutCurve: Curves.easeInOutCubic,
-                    transitionBuilder:
-                        (Widget child, Animation<double> animation) =>
-                            ScaleTransition(child: child, scale: animation),
-                    child: _screenToShow(screenSize),
+                  child: SizedBox(
+                    width: screenSize.width,
+                    child: AnimatedSwitcher(
+                      duration: kAnimationDuration,
+                      switchInCurve: Curves.easeInOutCubic,
+                      switchOutCurve: Curves.easeInOutCubic,
+                      child: _screenToShow(screenSize),
+                    ),
                   ),
-                )),
+                ),
               ],
             ),
           )

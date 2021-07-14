@@ -1,7 +1,6 @@
 //
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 const Color kBackground = Colors.white;
 const Color kPrimaryLight = Color(0xFFAA9ABA);
@@ -14,11 +13,6 @@ const Color kSecondaryAccent = Color(0xFFBFA4A4);
 
 const Color kMainFontColor = Colors.black;
 const Color kSecondaryFontColor = Color(0xFF505050);
-
-// MAIN FONT
-TextStyle kMainFont(TextStyle args) {
-  return GoogleFonts.montserrat(textStyle: args);
-}
 
 // FONT SHADOWS
 
@@ -45,17 +39,27 @@ const BorderSide kTextFieldBorderSide =
 const Duration kAnimationDuration = Duration(milliseconds: 300);
 
 // FORM FIELD SHIT
-final InputDecoration kInputDecoration = InputDecoration(
-  filled: true,
-  focusColor: kPrimaryDark,
-  fillColor: kSecondaryAccent,
-  enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: kTextFieldBorderSide),
-  focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: kTextFieldBorderSide),
-  border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: kTextFieldBorderSide),
-);
+InputDecoration kInputDecoration(IconData icon) {
+  return InputDecoration(
+    contentPadding: const EdgeInsets.only(left: 8.0, bottom: 8.0, top: 8.0),
+    prefixIcon: Icon(
+      icon,
+      color: const Color(0xFF505050),
+    ),
+    filled: true,
+    focusColor: kPrimaryDark,
+    fillColor: kSecondaryAccent,
+    errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: kTextFieldBorderSide),
+    enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: kTextFieldBorderSide),
+    focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: kTextFieldBorderSide),
+    border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: kTextFieldBorderSide),
+  );
+}

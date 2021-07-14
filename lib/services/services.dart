@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:chrome_extension/services/models/search_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'models/response_model.dart';
 
@@ -116,3 +117,7 @@ class SharedPrefs {
     return status;
   }
 }
+
+void launchTOS() async => await canLaunch('https://flutter.dev')
+    ? await launch('https://flutter.dev')
+    : throw 'Could not launch https://flutter.dev';

@@ -11,17 +11,22 @@ import 'package:flutter/material.dart';
 
 Future<void> main() async {
   final status = await SharedPrefs.getPref("isLoggedIn");
-  print(status);
   runApp(
     MaterialApp(
       theme: ThemeData(
+          fontFamily: 'Montserrat',
+          colorScheme: ThemeData().colorScheme.copyWith(
+                secondary: kPrimaryDark,
+                onSecondary: kPrimaryDark,
+              ),
+          accentColor: kPrimaryDark,
           textTheme: const TextTheme(
-        bodyText1: TextStyle(),
-        bodyText2: TextStyle(),
-      ).apply(
-        bodyColor: kMainFontColor,
-        displayColor: kSecondaryFontColor,
-      )),
+            bodyText1: TextStyle(),
+            bodyText2: TextStyle(),
+          ).apply(
+            bodyColor: kMainFontColor,
+            displayColor: kSecondaryFontColor,
+          )),
       // home: RegisterScreen(),
       home: status == true ? const Index() : const SplashScreen(),
       debugShowCheckedModeBanner: false,

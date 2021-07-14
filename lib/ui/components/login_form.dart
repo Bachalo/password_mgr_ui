@@ -1,9 +1,14 @@
 //
 
+import 'package:chrome_extension/services/models/response_model.dart';
+import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/ui/components/animated_textfield.dart';
 import 'package:chrome_extension/ui/components/animted_bottom_button.dart';
-import 'package:chrome_extension/ui/components/checkbox_field.dart';
+
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+
+import '../scheme.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -15,6 +20,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController emailTextController = TextEditingController();
   final TextEditingController passwordTextController = TextEditingController();
+  var approved = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -29,41 +35,72 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     return Form(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           AnimatedFormTextFlied(
             screenSize: screenSize,
             controller: emailTextController,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return "Please enter your username";
-              }
-              return null;
-            },
+            validator: (value) => EmailValidator.validate(value!)
+                ? null
+                : "Please enter a valid email",
             fieldTitlte: "email",
             obscureText: false,
+            prefixIcon: Icons.email,
           ),
           AnimatedFormTextFlied(
             screenSize: screenSize,
             controller: passwordTextController,
             validator: (value) {
-              if (value!.isEmpty) {
-                return "Please enter your username";
+              if (value!.length <= 7) {
+                return "Please enter a password";
               }
               return null;
             },
             fieldTitlte: "password",
             obscureText: true,
+            prefixIcon: Icons.password,
           ),
-          const CheckBoxField("Keep me logged in"),
-          AnimatedBottomButton("LOGIN", () {
-            print(emailTextController.text + passwordTextController.text);
-          }),
-          SizedBox(
-            height: screenSize.height / 10,
-          )
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: Checkbox(
+                    value: approved,
+                    onChanged: (value) {
+                      setState(() {
+                        approved = !approved;
+                      });
+                    }),
+              ),
+              Text(
+                "Keep me logged in",
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: kFontBold,
+                    shadows: kFontShadow,
+                    fontStyle: FontStyle.italic),
+              ),
+            ],
+          ),
+          Expanded(
+            child: AnimatedBottomButton("LOGIN", () async {
+              print(approved);
+              if (_formKey.currentState!.validate()) {
+                final ResponseMessage message = await Services.login(
+                    emailTextController.text, passwordTextController.text);
+                if (message.response == "succesful" ||
+                    message.response == "You are already logged in") {
+                  approved ? SharedPrefs.setPref("isLoggedIn", true) : null;
+                  Navigator.pushReplacementNamed(context, "/home");
+                }
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(message.response)));
+              }
+            }),
+          ),
         ],
       ),
     );
