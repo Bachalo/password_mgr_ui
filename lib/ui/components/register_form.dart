@@ -1,18 +1,21 @@
 //
 
 import 'package:chrome_extension/services/models/response_model.dart';
+import 'package:chrome_extension/services/provider.dart';
 import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/ui/components/animated_textfield.dart';
 import 'package:chrome_extension/ui/components/animted_bottom_button.dart';
 import 'package:chrome_extension/ui/components/checkbox_form_field.dart';
+import 'package:chrome_extension/ui/pages/index.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 import '../scheme.dart';
 
 class RegisterForm extends StatefulWidget {
-  final Size screenSize;
-  const RegisterForm({required this.screenSize, Key? key}) : super(key: key);
+  const RegisterForm({Key? key}) : super(key: key);
 
   @override
   _RegisterFormState createState() => _RegisterFormState();
@@ -25,6 +28,8 @@ class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController passwordTextController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  var loading = false;
 
   @override
   void dispose() {
@@ -118,23 +123,35 @@ class _RegisterFormState extends State<RegisterForm> {
               }),
           // const CheckBoxField("I agree to the", " terms of service "),
           Expanded(
-            child: AnimatedBottomButton("REGISTER", () async {
-              if (_formKey.currentState!.validate()) {
-                print("logging...");
-                final ResponseMessage message = await Services.register(
-                    usernameTextController.text,
-                    emailTextController.text,
-                    passwordTextController.text);
-                if (message.response == "succesful") {
-                  SharedPrefs.setPref("isLoggedIn", true);
-                  final status = await SharedPrefs.getPref("isLoggedIn");
-                  print(status);
-                  Navigator.pushReplacementNamed(context, "/home");
+            child: Consumer<SplashScreenProvider>(
+              builder: (context, splashScreenProvider, child) =>
+                  AnimatedBottomButton("REGISTER", () async {
+                if (_formKey.currentState!.validate()) {
+                  setState(() {
+                    loading = true;
+                  });
+                  final ResponseMessage message = await Services.register(
+                      usernameTextController.text,
+                      emailTextController.text,
+                      passwordTextController.text);
+                  setState(() {
+                    loading = false;
+                  });
+                  if (message.response == "succesful") {
+                    SharedPrefs.setPref("isLoggedIn", true);
+                    splashScreenProvider.goHome();
+                    await Future.delayed(const Duration(milliseconds: 200));
+                    Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade, child: const Index()),
+                    );
+                  }
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(message.response)));
                 }
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(message.response)));
-              }
-            }),
+              }, loading),
+            ),
           ),
         ],
       ),

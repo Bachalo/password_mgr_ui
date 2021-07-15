@@ -7,7 +7,9 @@ import '../scheme.dart';
 class AnimatedBottomButton extends StatefulWidget {
   final String buttonText;
   final VoidCallback onPressed;
-  const AnimatedBottomButton(this.buttonText, this.onPressed, {Key? key})
+  final bool loading;
+  const AnimatedBottomButton(this.buttonText, this.onPressed, this.loading,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -60,23 +62,27 @@ class _AnimatedBottomButtonState extends State<AnimatedBottomButton> {
                 color: _hovering ? kPrimaryLight : kPrimaryDark,
               ),
               child: Center(
-                child: AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 100),
-                  curve: Curves.ease,
-                  style: _hovering
-                      ? const TextStyle(
-                          color: Colors.black,
-                          fontSize: 24 * 1.4,
-                          fontWeight: kFontBold,
-                        )
-                      : const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: kFontBold,
-                          fontStyle: FontStyle.italic,
-                        ),
-                  child: Text(widget.buttonText),
-                ),
+                child: widget.loading
+                    ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      )
+                    : AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 100),
+                        curve: Curves.ease,
+                        style: _hovering
+                            ? const TextStyle(
+                                color: Colors.black,
+                                fontSize: 24 * 1.4,
+                                fontWeight: kFontBold,
+                              )
+                            : const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: kFontBold,
+                                fontStyle: FontStyle.italic,
+                              ),
+                        child: Text(widget.buttonText),
+                      ),
               ),
             ),
           ),

@@ -13,6 +13,7 @@ Future<void> main() async {
   final status = await SharedPrefs.getPref("isLoggedIn");
   runApp(
     MaterialApp(
+      onGenerateRoute: (settings) {},
       theme: ThemeData(
           fontFamily: 'Montserrat',
           colorScheme: ThemeData().colorScheme.copyWith(

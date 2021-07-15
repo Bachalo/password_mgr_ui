@@ -1,12 +1,16 @@
 //
 
 import 'package:chrome_extension/services/models/response_model.dart';
+import 'package:chrome_extension/services/provider.dart';
 import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/ui/components/animated_textfield.dart';
 import 'package:chrome_extension/ui/components/animted_bottom_button.dart';
+import 'package:chrome_extension/ui/pages/index.dart';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 import '../scheme.dart';
 
@@ -21,7 +25,7 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController emailTextController = TextEditingController();
   final TextEditingController passwordTextController = TextEditingController();
   var approved = false;
-
+  var loading = false;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -86,21 +90,35 @@ class _LoginFormState extends State<LoginForm> {
             ],
           ),
           Expanded(
-            child: AnimatedBottomButton("LOGIN", () async {
-              print(approved);
-              if (_formKey.currentState!.validate()) {
-                final ResponseMessage message = await Services.login(
-                    emailTextController.text, passwordTextController.text);
-                if (message.response == "succesful" ||
-                    message.response == "You are already logged in") {
-                  approved ? SharedPrefs.setPref("isLoggedIn", true) : null;
-                  Navigator.pushReplacementNamed(context, "/home");
+            child: Consumer<SplashScreenProvider>(
+              builder: (context, splashScreenProvider, child) =>
+                  AnimatedBottomButton("LOGIN", () async {
+                if (_formKey.currentState!.validate()) {
+                  setState(() {
+                    loading = true;
+                  });
+                  final ResponseMessage message = await Services.login(
+                      emailTextController.text, passwordTextController.text);
+                  setState(() {
+                    loading = false;
+                  });
+                  if (message.response == "succesful" ||
+                      message.response == "You are already logged in") {
+                    approved ? SharedPrefs.setPref("isLoggedIn", true) : null;
+                    splashScreenProvider.goHome();
+                    await Future.delayed(const Duration(milliseconds: 250));
+                    Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade, child: const Index()),
+                    );
+                  }
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(message.response)));
                 }
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(message.response)));
-              }
-            }),
-          ),
+              }, loading),
+            ),
+          )
         ],
       ),
     );
