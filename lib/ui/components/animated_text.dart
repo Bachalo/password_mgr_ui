@@ -1,5 +1,6 @@
 //
 
+import 'package:chrome_extension/ui/scheme.dart';
 import 'package:flutter/material.dart';
 
 import 'flashing_cursor.dart';
@@ -22,7 +23,7 @@ class _AnimatedTextState extends State<AnimatedText> {
           children: [
             Text(
               widget.text.substring(0, value),
-              style: const TextStyle(color: Colors.cyan),
+              style: const TextStyle(color: kSecondaryFontColor),
             ),
             const FlashingCursor()
           ],

@@ -1,5 +1,6 @@
 //
 
+import 'dart:js' as js;
 import 'package:chrome_extension/services/provider.dart';
 import 'package:chrome_extension/ui/components/login_form.dart';
 import 'package:chrome_extension/ui/components/register_form.dart';
@@ -18,6 +19,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   var _complete = false;
+  dynamic url = js.JsObject.fromBrowserObject(js.context['state']);
 
   Widget _screenToShow(registering, logging, transition) {
     if (registering == true &&
@@ -94,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 child: SizedBox(
                                   width: 139,
                                   child: Text(
-                                    "Your password manager",
+                                    url["currentURL"],
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 13,

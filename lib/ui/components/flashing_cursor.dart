@@ -1,5 +1,6 @@
 //
 
+import 'package:chrome_extension/ui/scheme.dart';
 import 'package:flutter/material.dart';
 
 class FlashingCursor extends StatefulWidget {
@@ -28,7 +29,7 @@ class _FlashingCursorState extends State<FlashingCursor>
             _animationController.drive(CurveTween(curve: Curves.easeInOut)),
         child: const Text(
           "_",
-          style: TextStyle(color: Colors.cyan),
+          style: TextStyle(color: kSecondaryFontColor),
         ));
   }
 
