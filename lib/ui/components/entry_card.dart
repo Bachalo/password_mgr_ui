@@ -30,7 +30,7 @@ class EntryCard extends StatelessWidget {
       padding: const EdgeInsets.all(14.0),
       child: Container(
         width: screenSize.width * 0.91,
-        height: screenSize.height * 0.19,
+        height: screenSize.height * 0.31,
         decoration: BoxDecoration(
             color: kSecondaryAccent,
             borderRadius: BorderRadius.circular(10),
@@ -93,7 +93,7 @@ class EntryCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        password,
+                        password.replaceAll(RegExp("."), "*"),
                         style: const TextStyle(
                           fontSize: 18,
                           color: kSecondaryFontColor,

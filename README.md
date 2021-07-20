@@ -18,3 +18,7 @@ What's new ?
 
 
 Target proportions = 2.1
+
+
+height = 590px
+widht = 414px

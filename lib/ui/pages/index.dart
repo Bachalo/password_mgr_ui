@@ -4,6 +4,7 @@ import 'dart:js' as js;
 import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/services/models/response_model.dart';
 import 'package:chrome_extension/services/models/search_model.dart';
+import 'package:chrome_extension/ui/components/addnew_popup.dart';
 import 'package:chrome_extension/ui/components/animated_text.dart';
 import 'package:chrome_extension/ui/components/entry_card.dart';
 import 'package:chrome_extension/ui/scheme.dart';
@@ -61,8 +62,8 @@ class _IndexState extends State<Index> {
               ),
             ),
             const Spacer(),
-            AnimatedText(
-                "${url["currentURL"]}", const Duration(microseconds: 300)),
+            // AnimatedText(
+            //     "${url["currentURL"]}", const Duration(microseconds: 300)),
           ],
         ),
         actions: [
@@ -98,7 +99,8 @@ class _IndexState extends State<Index> {
         onPressed: () {
           showDialog(
               context: context,
-              builder: (BuildContext context) => _showPopupInput(context, url));
+              builder: (BuildContext context) =>
+                  AddNewPopup(url: url["currentURL"]));
         },
         child: const Icon(Icons.add),
       ),
@@ -129,9 +131,7 @@ class _IndexState extends State<Index> {
                         appIcon: Icons.person,
                         appName: "appName",
                         email: _futureList[index].email,
-                        password: _futureList[index]
-                            .password
-                            .replaceAll(RegExp("."), "*"),
+                        password: _futureList[index].password,
                         appTag: "appTag",
                         timeFromAddded: "timeFromAddded");
                   },
@@ -200,8 +200,7 @@ class DataSearch extends SearchDelegate<String> {
                   appIcon: Icons.person,
                   appName: "appName",
                   email: _futureList[index].email,
-                  password:
-                      _futureList[index].password.replaceAll(RegExp("."), "*"),
+                  password: _futureList[index].password,
                   appTag: "appTag",
                   timeFromAddded: "timeFromAddded");
             },
@@ -210,113 +209,4 @@ class DataSearch extends SearchDelegate<String> {
       },
     );
   }
-}
-
-Widget _showPopupInput(BuildContext context, url) {
-  final TextEditingController newEmailTextController = TextEditingController();
-  final TextEditingController newPasswordTextController =
-      TextEditingController();
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  return AlertDialog(
-    backgroundColor: Colors.grey[900],
-    title: const Text(
-      "Add new password",
-      style: TextStyle(color: Colors.cyan),
-    ),
-    content: SizedBox(
-      height: 400,
-      child: Column(
-        children: <Widget>[
-          Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 450,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value!.length <= 1) {
-                          return "Please enter a email";
-                        }
-                        return null;
-                      },
-                      controller: newEmailTextController,
-                      style: const TextStyle(
-                        color: Colors.cyan,
-                      ),
-                      decoration: InputDecoration(
-                        focusColor: Colors.cyan,
-                        fillColor: Colors.grey.withOpacity(0.1),
-                        filled: true,
-                        border: const OutlineInputBorder(),
-                        labelText: 'Email',
-                        labelStyle: const TextStyle(color: Colors.cyan),
-                        hoverColor: Colors.grey.withOpacity(0.2),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 450,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value!.length <= 7) {
-                          return "Please enter a password";
-                        }
-                        return null;
-                      },
-                      controller: newPasswordTextController,
-                      obscureText: true,
-                      style: const TextStyle(
-                        color: Colors.cyan,
-                      ),
-                      decoration: InputDecoration(
-                        focusColor: Colors.cyan,
-                        fillColor: Colors.grey.withOpacity(0.1),
-                        filled: true,
-                        border: const OutlineInputBorder(),
-                        labelText: 'Password',
-                        labelStyle: const TextStyle(color: Colors.cyan),
-                        hoverColor: Colors.grey.withOpacity(0.2),
-                      ),
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(Icons.close),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    final ResponseMessage message = await Services.addNew(
-                      newPasswordTextController.text,
-                      newEmailTextController.text,
-                      url["currentURL"],
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(message.response),
-                      ),
-                    );
-                  },
-                  child: const Icon(Icons.add),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    ),
-  );
 }

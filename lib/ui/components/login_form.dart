@@ -106,7 +106,7 @@ class _LoginFormState extends State<LoginForm> {
                       message.response == "You are already logged in") {
                     approved ? SharedPrefs.setPref("isLoggedIn", true) : null;
                     splashScreenProvider.goHome();
-                    await Future.delayed(const Duration(milliseconds: 250));
+                    // await Future.delayed(const Duration(milliseconds: 250));
                     Navigator.pushReplacement(
                       context,
                       PageTransition(

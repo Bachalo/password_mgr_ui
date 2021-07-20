@@ -138,9 +138,11 @@ class _RegisterFormState extends State<RegisterForm> {
                     loading = false;
                   });
                   if (message.response == "succesful") {
+                    await Services.login(
+                        emailTextController.text, passwordTextController.text);
                     SharedPrefs.setPref("isLoggedIn", true);
                     splashScreenProvider.goHome();
-                    await Future.delayed(const Duration(milliseconds: 200));
+                    // await Future.delayed(const Duration(milliseconds: 200));
                     Navigator.pushReplacement(
                       context,
                       PageTransition(

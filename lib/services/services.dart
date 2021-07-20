@@ -95,11 +95,7 @@ class Services {
       ),
     );
 
-    print(response.statusCode);
     final List<SearchResult> message = searchResultFromJson(response.body);
-
-    print(response.body);
-
     return message;
   }
 }
