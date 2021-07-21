@@ -5,15 +5,13 @@ import 'package:flutter/material.dart';
 import '../scheme.dart';
 
 class AnimatedFormTextFlied extends StatefulWidget {
-  final Size screenSize;
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final String fieldTitlte;
   final bool obscureText;
   final IconData prefixIcon;
   const AnimatedFormTextFlied(
-      {required this.screenSize,
-      required this.controller,
+      {required this.controller,
       required this.validator,
       required this.fieldTitlte,
       required this.obscureText,
@@ -51,9 +49,10 @@ class _AnimatedFormTextFieldState extends State<AnimatedFormTextFlied> {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return SizedBox(
       height: 100,
-      width: widget.screenSize.width * 0.733333333,
+      width: screenSize.width * 0.733333333,
       child: Center(
         child: Stack(
           alignment: Alignment.center,

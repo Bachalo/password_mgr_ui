@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   double _height(registering, logging, transition, screenSize) {
     if (registering || logging && transition == false) {
-      return screenSize.height * 0.7;
+      return screenSize.height * 0.90;
     } else if (registering == false &&
         logging == false &&
         transition == false) {
@@ -85,41 +85,46 @@ class _SplashScreenState extends State<SplashScreen>
               const Spacer(),
               Center(
                 child: AnimatedSwitcher(
-                    duration: kAnimationDuration,
-                    child: !provider.transition
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                  width: 139,
-                                  child: Text(
-                                    "Your password manager",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: kPrimaryLight,
-                                      fontWeight: kFontRegular,
-                                      shadows: kFontShadow,
-                                    ),
-                                  ),
+                  duration: const Duration(milliseconds: 500),
+                  switchInCurve: const Interval(0.75, 1.0),
+                  switchOutCurve: const Interval(0.75, 1.0),
+                  child: titleHider(
+                      provider.registering,
+                      provider.logging,
+                      provider.transition,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 139,
+                              child: Text(
+                                "Your password manager",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: kPrimaryLight,
+                                  fontWeight: kFontRegular,
+                                  shadows: kFontShadow,
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  "PASSWORD_MGR",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: kPrimaryDark,
-                                    fontWeight: kFontBold,
-                                  ),
-                                ),
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              "PASSWORD_MGR",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: kPrimaryDark,
+                                fontWeight: kFontBold,
                               ),
-                            ],
-                          )
-                        : const SizedBox()),
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
               ),
               const Spacer(),
               AnimatedContainer(
@@ -273,5 +278,14 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
     );
+  }
+}
+
+Widget titleHider(registering, logging, transition, Widget widgetToShow) {
+  if (registering || logging && transition == false) {
+    return const SizedBox();
+  } else {
+    Future.delayed(const Duration(milliseconds: 350));
+    return widgetToShow;
   }
 }

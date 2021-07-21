@@ -41,7 +41,6 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
@@ -49,7 +48,6 @@ class _RegisterFormState extends State<RegisterForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           AnimatedFormTextFlied(
-            screenSize: screenSize,
             controller: usernameTextController,
             validator: (value) {
               if (value!.length <= 7) {
@@ -62,7 +60,6 @@ class _RegisterFormState extends State<RegisterForm> {
             prefixIcon: Icons.supervised_user_circle,
           ),
           AnimatedFormTextFlied(
-            screenSize: screenSize,
             controller: emailTextController,
             fieldTitlte: "email",
             validator: (value) => EmailValidator.validate(value!)
@@ -72,7 +69,6 @@ class _RegisterFormState extends State<RegisterForm> {
             prefixIcon: Icons.email,
           ),
           AnimatedFormTextFlied(
-            screenSize: screenSize,
             controller: passwordTextController,
             fieldTitlte: "password",
             validator: (value) {

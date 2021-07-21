@@ -37,7 +37,6 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
@@ -45,7 +44,6 @@ class _LoginFormState extends State<LoginForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           AnimatedFormTextFlied(
-            screenSize: screenSize,
             controller: emailTextController,
             validator: (value) => EmailValidator.validate(value!)
                 ? null
@@ -55,7 +53,6 @@ class _LoginFormState extends State<LoginForm> {
             prefixIcon: Icons.email,
           ),
           AnimatedFormTextFlied(
-            screenSize: screenSize,
             controller: passwordTextController,
             validator: (value) {
               if (value!.length <= 7) {

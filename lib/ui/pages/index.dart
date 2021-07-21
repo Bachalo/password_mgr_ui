@@ -2,10 +2,8 @@
 
 import 'dart:js' as js;
 import 'package:chrome_extension/services/services.dart';
-import 'package:chrome_extension/services/models/response_model.dart';
 import 'package:chrome_extension/services/models/search_model.dart';
 import 'package:chrome_extension/ui/components/addnew_popup.dart';
-import 'package:chrome_extension/ui/components/animated_text.dart';
 import 'package:chrome_extension/ui/components/entry_card.dart';
 import 'package:chrome_extension/ui/scheme.dart';
 import 'package:flutter/material.dart';
@@ -52,8 +50,8 @@ class _IndexState extends State<Index> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         title: Row(
-          children: [
-            const Text(
+          children: const [
+            Text(
               "PASSWORD_MGR",
               style: TextStyle(
                 color: kPrimaryDark,
@@ -61,9 +59,7 @@ class _IndexState extends State<Index> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const Spacer(),
-            // AnimatedText(
-            //     "${url["currentURL"]}", const Duration(microseconds: 300)),
+            Spacer(),
           ],
         ),
         actions: [
@@ -128,11 +124,12 @@ class _IndexState extends State<Index> {
                   itemCount: _futureList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return EntryCard(
+                        id: _futureList[index].id,
                         appIcon: Icons.person,
                         appName: "appName",
                         email: _futureList[index].email,
                         password: _futureList[index].password,
-                        appTag: "appTag",
+                        url: "https://randomurl.com",
                         timeFromAddded: "timeFromAddded");
                   },
                 );
@@ -197,11 +194,12 @@ class DataSearch extends SearchDelegate<String> {
             itemCount: _futureList.length,
             itemBuilder: (BuildContext context, int index) {
               return EntryCard(
+                  id: _futureList[index].id,
                   appIcon: Icons.person,
                   appName: "appName",
                   email: _futureList[index].email,
                   password: _futureList[index].password,
-                  appTag: "appTag",
+                  url: "https://randomurl.com",
                   timeFromAddded: "timeFromAddded");
             },
           );
