@@ -143,9 +143,13 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
                           obscureText: false,
                           prefixIcon: Icons.link,
                         ),
-                        AnimatedBottomButton("SAVE", () {
-                          Navigator.pop(context);
-                        }, loading),
+                        AnimatedBottomButton(
+                          buttonText: "SAVE",
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          loading: loading,
+                        ),
                       ],
                     ),
                   ),

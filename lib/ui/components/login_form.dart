@@ -89,31 +89,35 @@ class _LoginFormState extends State<LoginForm> {
           Expanded(
             child: Consumer<SplashScreenProvider>(
               builder: (context, splashScreenProvider, child) =>
-                  AnimatedBottomButton("LOGIN", () async {
-                if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    loading = true;
-                  });
-                  final ResponseMessage message = await Services.login(
-                      emailTextController.text, passwordTextController.text);
-                  setState(() {
-                    loading = false;
-                  });
-                  if (message.response == "succesful" ||
-                      message.response == "You are already logged in") {
-                    approved ? SharedPrefs.setPref("isLoggedIn", true) : null;
-                    splashScreenProvider.goHome();
-                    // await Future.delayed(const Duration(milliseconds: 250));
-                    Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade, child: const Index()),
-                    );
+                  AnimatedBottomButton(
+                buttonText: "LOGIN",
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      loading = true;
+                    });
+                    final ResponseMessage message = await Services.login(
+                        emailTextController.text, passwordTextController.text);
+                    setState(() {
+                      loading = false;
+                    });
+                    if (message.response == "succesful" ||
+                        message.response == "You are already logged in") {
+                      approved ? SharedPrefs.setPref("isLoggedIn", true) : null;
+                      splashScreenProvider.goHome();
+                      // await Future.delayed(const Duration(milliseconds: 250));
+                      Navigator.pushReplacement(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: const Index()),
+                      );
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(message.response)));
                   }
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(message.response)));
-                }
-              }, loading),
+                },
+              ),
             ),
           )
         ],

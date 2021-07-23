@@ -1,7 +1,5 @@
 //
 
-import 'package:chrome_extension/services/models/response_model.dart';
-import 'package:chrome_extension/services/services.dart';
 import 'package:flutter/material.dart';
 
 class AddNewPopup extends StatelessWidget {

@@ -121,34 +121,39 @@ class _RegisterFormState extends State<RegisterForm> {
           Expanded(
             child: Consumer<SplashScreenProvider>(
               builder: (context, splashScreenProvider, child) =>
-                  AnimatedBottomButton("REGISTER", () async {
-                if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    loading = true;
-                  });
-                  final ResponseMessage message = await Services.register(
-                      usernameTextController.text,
-                      emailTextController.text,
-                      passwordTextController.text);
-                  setState(() {
-                    loading = false;
-                  });
-                  if (message.response == "succesful") {
-                    await Services.login(
-                        emailTextController.text, passwordTextController.text);
-                    SharedPrefs.setPref("isLoggedIn", true);
-                    splashScreenProvider.goHome();
-                    // await Future.delayed(const Duration(milliseconds: 200));
-                    Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade, child: const Index()),
-                    );
-                  }
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(message.response)));
-                }
-              }, loading),
+                  AnimatedBottomButton(
+                      buttonText: "REGISTER",
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            loading = true;
+                          });
+                          final ResponseMessage message =
+                              await Services.register(
+                                  usernameTextController.text,
+                                  emailTextController.text,
+                                  passwordTextController.text);
+                          setState(() {
+                            loading = false;
+                          });
+                          if (message.response == "succesful") {
+                            await Services.login(emailTextController.text,
+                                passwordTextController.text);
+                            SharedPrefs.setPref("isLoggedIn", true);
+                            splashScreenProvider.goHome();
+                            // await Future.delayed(const Duration(milliseconds: 200));
+                            Navigator.pushReplacement(
+                              context,
+                              PageTransition(
+                                  type: PageTransitionType.fade,
+                                  child: const Index()),
+                            );
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(message.response)));
+                        }
+                      },
+                      loading: loading),
             ),
           ),
         ],

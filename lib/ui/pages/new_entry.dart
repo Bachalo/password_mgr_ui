@@ -2,9 +2,7 @@ import 'package:chrome_extension/services/models/response_model.dart';
 import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/ui/components/animated_textfield.dart';
 import 'package:chrome_extension/ui/components/animted_bottom_button.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 import '../scheme.dart';
 
@@ -135,21 +133,23 @@ class _NewEntryState extends State<NewEntry> {
                           obscureText: false,
                           prefixIcon: Icons.tag,
                         ),
-                        AnimatedBottomButton("ADD NEW PASSWORD", () async {
-                          if (_formKey.currentState!.validate()) {
-                            final ResponseMessage message =
-                                await Services.addNew(
-                              appNameTextEditingController.text,
-                              passwordTextEditingController.text,
-                              emailTextEditingController.text,
-                              urlTextEditingController.text,
-                              appTagtextEditingController.text,
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(message.response)));
-                            Navigator.pop(context);
-                          }
-                        }, loading)
+                        AnimatedBottomButton(
+                            buttonText: "ADD NEW PASSWORD",
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                final ResponseMessage message =
+                                    await Services.addNew(
+                                  appNameTextEditingController.text,
+                                  passwordTextEditingController.text,
+                                  emailTextEditingController.text,
+                                  urlTextEditingController.text,
+                                  appTagtextEditingController.text,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(message.response)));
+                                Navigator.pop(context);
+                              }
+                            })
                       ],
                     ),
                   ),

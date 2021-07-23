@@ -5,6 +5,7 @@ import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/services/models/search_model.dart';
 import 'package:chrome_extension/ui/components/entry_card.dart';
 import 'package:chrome_extension/ui/pages/new_entry.dart';
+import 'package:chrome_extension/ui/pages/settings.dart';
 import 'package:chrome_extension/ui/scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -78,7 +79,15 @@ class _IndexState extends State<Index> {
             width: 9.0,
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      duration: kAnimationDuration,
+                      curve: Curves.easeInOutCubic,
+                      child: const SettingsPage(),
+                      type: PageTransitionType.rightToLeftWithFade));
+            },
             icon: const Icon(
               Icons.settings,
               size: 36.0,
@@ -98,15 +107,11 @@ class _IndexState extends State<Index> {
             context,
             PageTransition(
               curve: Curves.easeInOutCubic,
-              duration: const Duration(milliseconds: 150),
+              duration: kAnimationDuration,
               type: PageTransitionType.fade,
               child: const NewEntry(),
             ),
           );
-          // showDialog(
-          //     context: context,
-          //     builder: (BuildContext context) =>
-          //         AddNewPopup(url: url["currentURL"]));
         },
         child: const Icon(Icons.add),
       ),

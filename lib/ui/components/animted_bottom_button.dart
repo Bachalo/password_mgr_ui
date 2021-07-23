@@ -8,9 +8,16 @@ class AnimatedBottomButton extends StatefulWidget {
   final String buttonText;
   final VoidCallback onPressed;
   final bool loading;
-  const AnimatedBottomButton(this.buttonText, this.onPressed, this.loading,
-      {Key? key})
-      : super(key: key);
+  final Color staticColor;
+  final Color hoveringColor;
+  const AnimatedBottomButton({
+    Key? key,
+    required this.buttonText,
+    required this.onPressed,
+    this.loading = false,
+    this.staticColor = kPrimaryDark,
+    this.hoveringColor = kPrimaryLight,
+  }) : super(key: key);
 
   @override
   _AnimatedBottomButtonState createState() => _AnimatedBottomButtonState();
@@ -59,7 +66,7 @@ class _AnimatedBottomButtonState extends State<AnimatedBottomButton> {
                   ),
                 ],
                 borderRadius: BorderRadius.circular(10),
-                color: _hovering ? kPrimaryLight : kPrimaryDark,
+                color: _hovering ? widget.hoveringColor : widget.staticColor,
               ),
               child: Center(
                 child: widget.loading
