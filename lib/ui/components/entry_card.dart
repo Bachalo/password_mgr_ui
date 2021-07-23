@@ -16,7 +16,7 @@ class EntryCard extends StatelessWidget {
     required this.email,
     required this.password,
     required this.url,
-    required this.timeFromAddded,
+    required this.appTag,
   }) : super(key: key);
 
   final int id;
@@ -25,7 +25,7 @@ class EntryCard extends StatelessWidget {
   final String email;
   final String password;
   final String url;
-  final String timeFromAddded;
+  final String appTag;
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +158,7 @@ class EntryCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      timeFromAddded,
+                      appTag,
                       style: const TextStyle(
                         fontSize: 18,
                         color: kSecondaryFontColor,

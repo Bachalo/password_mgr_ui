@@ -56,8 +56,8 @@ class Services {
 
   //
 
-  static Future<ResponseMessage> addNew(
-      String password, String email, String urlAdress) async {
+  static Future<ResponseMessage> addNew(String appName, String password,
+      String email, String urlAdress, String appTag) async {
     final Uri apiUri = Uri.parse("https://passwordmgrapi.herokuapp.com/add");
 
     final response = await http.post(
@@ -67,9 +67,11 @@ class Services {
       },
       body: jsonEncode(
         <String, String>{
+          "appName": appName,
           "password": password,
           "email": email,
-          "url_address": urlAdress
+          "url_address": urlAdress,
+          "appTag": appTag,
         },
       ),
     );
@@ -94,7 +96,10 @@ class Services {
         },
       ),
     );
-
+    print(response.body);
+    if (response.body.length <= 2) {
+      return [];
+    }
     final List<SearchResult> message = searchResultFromJson(response.body);
     return message;
   }

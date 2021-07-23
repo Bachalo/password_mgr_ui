@@ -3,10 +3,11 @@
 import 'dart:js' as js;
 import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/services/models/search_model.dart';
-import 'package:chrome_extension/ui/components/addnew_popup.dart';
 import 'package:chrome_extension/ui/components/entry_card.dart';
+import 'package:chrome_extension/ui/pages/new_entry.dart';
 import 'package:chrome_extension/ui/scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Index extends StatefulWidget {
   const Index({Key? key}) : super(key: key);
@@ -42,7 +43,7 @@ class _IndexState extends State<Index> {
   Widget build(BuildContext context) {
     final url = js.JsObject.fromBrowserObject(js.context['state']);
     var screenSize = MediaQuery.of(context).size;
-
+    print(_getFuture());
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -93,10 +94,19 @@ class _IndexState extends State<Index> {
         backgroundColor: Colors.grey.withOpacity(0.1),
         hoverColor: Colors.grey.withOpacity(0.2),
         onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) =>
-                  AddNewPopup(url: url["currentURL"]));
+          Navigator.push(
+            context,
+            PageTransition(
+              curve: Curves.easeInOutCubic,
+              duration: const Duration(milliseconds: 150),
+              type: PageTransitionType.fade,
+              child: const NewEntry(),
+            ),
+          );
+          // showDialog(
+          //     context: context,
+          //     builder: (BuildContext context) =>
+          //         AddNewPopup(url: url["currentURL"]));
         },
         child: const Icon(Icons.add),
       ),
@@ -117,20 +127,24 @@ class _IndexState extends State<Index> {
             future: _userFuture,
             builder: (context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.black,
+                ));
               } else {
                 final List<SearchResult> _futureList = snapshot.data;
                 return ListView.builder(
                   itemCount: _futureList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return EntryCard(
-                        id: _futureList[index].id,
-                        appIcon: Icons.person,
-                        appName: "appName",
-                        email: _futureList[index].email,
-                        password: _futureList[index].password,
-                        url: "https://randomurl.com",
-                        timeFromAddded: "timeFromAddded");
+                      id: _futureList[index].id,
+                      appIcon: Icons.person,
+                      appName: _futureList[index].appNAme,
+                      email: _futureList[index].email,
+                      password: _futureList[index].password,
+                      url: _futureList[index].urlAddress,
+                      appTag: _futureList[index].dateAdded,
+                    );
                   },
                 );
               }
@@ -194,13 +208,14 @@ class DataSearch extends SearchDelegate<String> {
             itemCount: _futureList.length,
             itemBuilder: (BuildContext context, int index) {
               return EntryCard(
-                  id: _futureList[index].id,
-                  appIcon: Icons.person,
-                  appName: "appName",
-                  email: _futureList[index].email,
-                  password: _futureList[index].password,
-                  url: "https://randomurl.com",
-                  timeFromAddded: "timeFromAddded");
+                id: _futureList[index].id,
+                appIcon: Icons.person,
+                appName: _futureList[index].appNAme,
+                email: _futureList[index].email,
+                password: _futureList[index].password,
+                url: _futureList[index].urlAddress,
+                appTag: _futureList[index].appTag,
+              );
             },
           );
         }

@@ -28,7 +28,6 @@ Future<void> main() async {
             bodyColor: kMainFontColor,
             displayColor: kSecondaryFontColor,
           )),
-      // home: RegisterScreen(),
       home: status == true ? const Index() : const SplashScreen(),
       debugShowCheckedModeBanner: false,
       routes: {

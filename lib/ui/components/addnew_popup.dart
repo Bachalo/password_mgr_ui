@@ -96,16 +96,16 @@ class AddNewPopup extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () async {
-                      final ResponseMessage message = await Services.addNew(
-                        newPasswordTextController.text,
-                        newEmailTextController.text,
-                        url,
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(message.response),
-                        ),
-                      );
+                      // final ResponseMessage message = await Services.addNew(
+                      //   newPasswordTextController.text,
+                      //   newEmailTextController.text,
+                      //   url,
+                      // );
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(
+                      //     content: Text(message.response),
+                      //   ),
+                      // );
                     },
                     child: const Icon(Icons.add),
                   )
