@@ -1,6 +1,8 @@
 //
 
 import 'dart:convert';
+import 'package:chrome_extension/services/models/details_model.dart';
+import 'package:chrome_extension/services/models/editdata_model.dart';
 import 'package:chrome_extension/services/models/search_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -80,6 +82,49 @@ class Services {
     return message;
   }
 
+  static Future<ResponseMessage> edit(
+      int id,
+      String oldAppName,
+      String oldPassword,
+      String oldEmail,
+      String oldUrlAdress,
+      String oldAppTag,
+      String newAppName,
+      String newPassword,
+      String newEmail,
+      String newUrlAdress,
+      String newAppTag) async {
+    final Uri apiUri =
+        Uri.parse("https://passwordmgrapi.herokuapp.com/getDetails");
+
+    final response = await http.post(
+      apiUri,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: editDataToJson(
+        EditData(
+          id: id,
+          oldPassInfo: PassInfo(
+              appName: oldAppName,
+              password: oldPassword,
+              email: oldEmail,
+              urlAddress: oldUrlAdress,
+              appTag: oldAppTag),
+          newPassInfo: PassInfo(
+              appName: newAppName,
+              password: newPassword,
+              email: newEmail,
+              urlAddress: newUrlAdress,
+              appTag: newAppTag),
+        ),
+      ),
+    );
+
+    // ResponseMessage message = responseMessageFromJson(response.body);
+    return ResponseMessage(response: "ok");
+  }
+
   //
 
   static Future<List<SearchResult>> search(String term) async {
@@ -101,6 +146,27 @@ class Services {
       return [];
     }
     final List<SearchResult> message = searchResultFromJson(response.body);
+    return message;
+  }
+
+  //
+
+  static Future<DetailsModel> getDetails(int id) async {
+    final Uri apiUri =
+        Uri.parse("https://passwordmgrapi.herokuapp.com/getDetails");
+
+    final response = await http.post(
+      apiUri,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, int>{
+          "searchId": id,
+        },
+      ),
+    );
+    final DetailsModel message = detailsModelFromJson(response.body);
     return message;
   }
 }

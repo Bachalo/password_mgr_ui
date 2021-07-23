@@ -1,3 +1,7 @@
+import 'package:chrome_extension/services/models/details_model.dart';
+import 'package:chrome_extension/services/models/response_model.dart';
+import 'package:chrome_extension/services/models/search_model.dart';
+import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/ui/components/animated_textfield.dart';
 import 'package:chrome_extension/ui/components/animted_bottom_button.dart';
 import 'package:email_validator/email_validator.dart';
@@ -32,11 +36,32 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var loading = false;
+
   @override
   void initState() {
     super.initState();
-    emailTextController.text = widget.email;
-    passwordTextController.text = widget.password;
+    _updateTextFields();
+  }
+
+  void _updateTextFields() async {
+    var data = await Services.getDetails(widget.id);
+    setState(() {
+      appNameTextController.text = data.appNAme;
+      emailTextController.text = data.email;
+      passwordTextController.text = data.password;
+      appTagTextController.text = data.appTag;
+      urlTextController.text = data.urlAddress;
+    });
+  }
+
+  @override
+  void dispose() {
+    appNameTextController.dispose();
+    emailTextController.dispose();
+    passwordTextController.dispose();
+    appTagTextController.dispose();
+    urlTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -145,8 +170,40 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
                         ),
                         AnimatedBottomButton(
                           buttonText: "SAVE",
-                          onPressed: () {
-                            Navigator.pop(context);
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                loading = true;
+                              });
+                              DetailsModel data =
+                                  await Services.getDetails(widget.id);
+                              print(widget.id);
+                              print(data.appNAme);
+                              print(data.password);
+                              print(data.email);
+
+                              print(data.urlAddress);
+
+                              print(data.appTag);
+
+                              ResponseMessage message = await Services.edit(
+                                  widget.id,
+                                  data.appNAme,
+                                  data.password,
+                                  data.email,
+                                  data.urlAddress,
+                                  data.appTag,
+                                  appNameTextController.text,
+                                  passwordTextController.text,
+                                  emailTextController.text,
+                                  urlTextController.text,
+                                  appTagTextController.text);
+                              print(message);
+                              setState(() {
+                                loading = false;
+                              });
+                              Navigator.pop(context);
+                            }
                           },
                           loading: loading,
                         ),
