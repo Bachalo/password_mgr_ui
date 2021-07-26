@@ -1,6 +1,7 @@
 //
 
 import 'dart:js' as js;
+import 'package:chrome_extension/services/provider.dart';
 import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/services/models/search_model.dart';
 import 'package:chrome_extension/ui/components/entry_card.dart';
@@ -9,6 +10,7 @@ import 'package:chrome_extension/ui/pages/settings.dart';
 import 'package:chrome_extension/ui/scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 class Index extends StatefulWidget {
   const Index({Key? key}) : super(key: key);
@@ -26,17 +28,13 @@ class _IndexState extends State<Index> {
   @override
   void initState() {
     super.initState();
-    _userFuture = _getFuture();
-  }
-
-  Future<List<SearchResult>> _getFuture() async {
-    return Services.search(url["currentURL"]);
+    _userFuture = Services.returnAll();
   }
 
   Future<void> _refresh() async {
     await Future.delayed(const Duration(seconds: 1));
     setState(() {
-      _userFuture = _getFuture();
+      _userFuture = Services.returnAll();
     });
   }
 
@@ -44,7 +42,6 @@ class _IndexState extends State<Index> {
   Widget build(BuildContext context) {
     final url = js.JsObject.fromBrowserObject(js.context['state']);
     var screenSize = MediaQuery.of(context).size;
-    print(_getFuture());
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -162,14 +159,18 @@ class _IndexState extends State<Index> {
 }
 
 class DataSearch extends SearchDelegate<String> {
-  final data = Services.search("url");
+  final data = Services.returnAll();
 
   @override
   List<Widget> buildActions(BuildContext context) {
     // action for appBar
 
     return <Widget>[
-      IconButton(onPressed: () {}, icon: const Icon(Icons.clear))
+      IconButton(
+          onPressed: () {
+            query = "";
+          },
+          icon: const Icon(Icons.clear))
     ];
   }
 
@@ -195,36 +196,39 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    Future<List<SearchResult>> _refresh() async {
-      await Future.delayed(const Duration(seconds: 1));
-      return Services.search(query);
-    }
-
-    final _userFuture = _refresh();
-
-    return FutureBuilder(
-      future: _userFuture,
-      builder: (context, AsyncSnapshot snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          final List<SearchResult> _futureList = snapshot.data;
+    return ChangeNotifierProvider<PasswordProvider>(
+      create: (context) => PasswordProvider(),
+      child: Consumer<PasswordProvider>(
+        builder: (context, provider, child) {
+          provider.updatePasswordList();
+          var suggestionList = searchThroughList(provider.passwordList, query);
           return ListView.builder(
-            itemCount: _futureList.length,
+            itemCount: suggestionList.length,
             itemBuilder: (BuildContext context, int index) {
               return EntryCard(
-                id: _futureList[index].id,
+                id: suggestionList[index].id,
                 appIcon: Icons.person,
-                appName: _futureList[index].appNAme,
-                email: _futureList[index].email,
-                password: _futureList[index].password,
-                url: _futureList[index].urlAddress,
-                appTag: _futureList[index].appTag,
+                appName: suggestionList[index].appNAme,
+                email: suggestionList[index].email,
+                password: suggestionList[index].password,
+                url: suggestionList[index].urlAddress,
+                appTag: suggestionList[index].appTag,
               );
             },
           );
-        }
-      },
+        },
+      ),
     );
   }
+}
+
+List<SearchResult> searchThroughList(List<SearchResult> data, String query) {
+  return data
+      .where((p) =>
+          p.appNAme.startsWith(query) ||
+          p.email.startsWith(query) ||
+          p.password.startsWith(query) ||
+          p.urlAddress.startsWith(query) ||
+          p.appTag.startsWith(query))
+      .toList();
 }

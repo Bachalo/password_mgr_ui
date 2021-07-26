@@ -5,14 +5,14 @@ What's new ?
 
 ## ToDo List
 
-- [Done] Basic Ui
+- [DONE] Basic Ui
 - [] Search
-- [Done] Add new
+- [DONE] Add new
 - [] Remove
-- [] Edit
-- [] Refresh
-- [] better desing
-- [] Animations
+- [DONE] Edit
+- [DONE] Refresh
+- [DONE] better desing
+- [DONE] Animations
 - [] Chrome extension testing
 
 

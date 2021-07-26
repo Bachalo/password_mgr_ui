@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 import 'package:chrome_extension/services/models/details_model.dart';
-import 'package:chrome_extension/services/models/editdata_model.dart';
 import 'package:chrome_extension/services/models/search_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -94,41 +93,41 @@ class Services {
       String newEmail,
       String newUrlAdress,
       String newAppTag) async {
-    final Uri apiUri =
-        Uri.parse("https://passwordmgrapi.herokuapp.com/getDetails");
+    final Uri apiUri = Uri.parse("https://passwordmgrapi.herokuapp.com/edit");
 
     final response = await http.post(
       apiUri,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: editDataToJson(
-        EditData(
-          id: id,
-          oldPassInfo: PassInfo(
-              appName: oldAppName,
-              password: oldPassword,
-              email: oldEmail,
-              urlAddress: oldUrlAdress,
-              appTag: oldAppTag),
-          newPassInfo: PassInfo(
-              appName: newAppName,
-              password: newPassword,
-              email: newEmail,
-              urlAddress: newUrlAdress,
-              appTag: newAppTag),
-        ),
+      body: json.encode(
+        {
+          "id": id,
+          "oldPassInfo": {
+            "appName": oldAppName,
+            "password": oldPassword,
+            "email": oldEmail,
+            "url_address": oldUrlAdress,
+            "appTag": oldAppTag
+          },
+          "NewPassInfo": {
+            "appName": newAppName,
+            "password": newPassword,
+            "email": newEmail,
+            "url_address": newUrlAdress,
+            "appTag": newAppTag
+          }
+        },
       ),
     );
-
-    // ResponseMessage message = responseMessageFromJson(response.body);
     return ResponseMessage(response: "ok");
   }
 
   //
 
-  static Future<List<SearchResult>> search(String term) async {
-    final Uri apiUri = Uri.parse("https://passwordmgrapi.herokuapp.com/search");
+  static Future<ResponseMessage> remove(String appName, String password,
+      String email, String urlAdress, String appTag) async {
+    final Uri apiUri = Uri.parse("https://passwordmgrapi.herokuapp.com/remove");
 
     final response = await http.post(
       apiUri,
@@ -137,14 +136,32 @@ class Services {
       },
       body: jsonEncode(
         <String, String>{
-          "searchTerm": term,
+          "appName": appName,
+          "password": password,
+          "email": email,
+          "url_address": urlAdress,
+          "appTag": appTag,
         },
       ),
     );
-    print(response.body);
-    if (response.body.length <= 2) {
-      return [];
-    }
+    final ResponseMessage message = responseMessageFromJson(response.body);
+
+    return message;
+  }
+
+  //
+
+  static Future<List<SearchResult>> returnAll() async {
+    final Uri apiUri =
+        Uri.parse("https://passwordmgrapi.herokuapp.com/returnAll");
+
+    final response = await http.get(
+      apiUri,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
     final List<SearchResult> message = searchResultFromJson(response.body);
     return message;
   }

@@ -1,10 +1,9 @@
 import 'package:chrome_extension/services/models/details_model.dart';
 import 'package:chrome_extension/services/models/response_model.dart';
-import 'package:chrome_extension/services/models/search_model.dart';
 import 'package:chrome_extension/services/services.dart';
 import 'package:chrome_extension/ui/components/animated_textfield.dart';
 import 'package:chrome_extension/ui/components/animted_bottom_button.dart';
-import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../scheme.dart';
@@ -125,10 +124,13 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
                         ),
                         AnimatedFormTextFlied(
                           controller: emailTextController,
-                          fieldTitlte: "email",
-                          validator: (value) => EmailValidator.validate(value!)
-                              ? null
-                              : "Please enter a valid email",
+                          fieldTitlte: "username/Email",
+                          validator: (value) {
+                            if (value!.length <= 3) {
+                              return "username or email is required";
+                            }
+                            return null;
+                          },
                           obscureText: false,
                           prefixIcon: Icons.email,
                         ),
@@ -186,6 +188,7 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
 
                               print(data.appTag);
 
+                              print(emailTextController.text);
                               ResponseMessage message = await Services.edit(
                                   widget.id,
                                   data.appNAme,
@@ -206,6 +209,46 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
                             }
                           },
                           loading: loading,
+                        ),
+                        const SizedBox(height: 20),
+                        AnimatedBottomButton(
+                          staticColor: const Color(0xFFfc584c),
+                          hoveringColor: const Color(0xFFff756b),
+                          buttonText: "DELETE PASSOWRD",
+                          onPressed: () {
+                            showCupertinoDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CupertinoAlertDialog(
+                                    title: const Text("Are you sure ?"),
+                                    content: const Text(
+                                        "Do you really want to delete this password"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("NO"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          DetailsModel data =
+                                              await Services.getDetails(
+                                                  widget.id);
+                                          await Services.remove(
+                                              data.appNAme,
+                                              data.password,
+                                              data.email,
+                                              data.urlAddress,
+                                              data.appTag);
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("YES"),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
                         ),
                       ],
                     ),
